@@ -35,4 +35,13 @@ public class Account {
 	public double getBalanceAccount() {
 		return balanceAccount;
 	}
+	
+	public boolean transfer(Account accountReceiveTransfer, double valueTransfer) {
+		boolean isPossibleTransfer = this.withDrawAccount(valueTransfer);
+		if(isPossibleTransfer) {
+			accountReceiveTransfer.depositAccount(valueTransfer);
+			return true;
+		}
+		return false;
+	}
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -58,6 +59,25 @@ public class ServiceBank {
 			return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
 		}
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+	
+	@PatchMapping("/transfer/{numberAccountRealizeTransfer}/{valueTransfer}/{numberAccountReceiveTransfer}")
+	ResponseEntity<String> transfer(@PathVariable long numberAccountRealizeTransfer, @PathVariable double valueTransfer, @PathVariable long numberAccountReceiveTransfer) {
+		boolean isExistAccountRealizeTransfer = accountList.containsKey(numberAccountRealizeTransfer);
+		if (isExistAccountRealizeTransfer) {
+			Account accountRealizeTransfer = accountList.get(numberAccountRealizeTransfer);
+			boolean isExistAccountReceiveTransfer = accountList.containsKey(numberAccountReceiveTransfer);
+			if (isExistAccountReceiveTransfer) {
+				Account accountReceiveTransfer = accountList.get(numberAccountReceiveTransfer);
+				boolean isTransfer = accountRealizeTransfer.transfer(accountReceiveTransfer, valueTransfer);
+				if (isTransfer) {
+					return new ResponseEntity<String>("Transferência realizada", HttpStatus.OK);
+				}
+				return new ResponseEntity<String>("Transferência mal sucedida", HttpStatus.UNAUTHORIZED);
+			}
+			return new ResponseEntity<String>("Conta de número: " + numberAccountReceiveTransfer + " não encontrado", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<String>("Conta de número: " + numberAccountRealizeTransfer + " não encontrado", HttpStatus.NOT_FOUND);
 	}
 
 }
