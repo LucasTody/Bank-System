@@ -48,17 +48,17 @@ public class ServiceBank {
 	}
 
 	@PostMapping("/withdraw/{numberAccount}/{valueWithdraw}")
-	ResponseEntity<Account> withdrawAccount(@PathVariable long numberAccount, @PathVariable double valueWithdraw) {
+	ResponseEntity<String> withdrawAccount(@PathVariable long numberAccount, @PathVariable double valueWithdraw) {
 		boolean isExistAccount = accountList.containsKey(numberAccount);
 		if (isExistAccount) {
 			Account account = accountList.get(numberAccount);
 			boolean isPossibleWithdraw = account.withDrawAccount(valueWithdraw);
 			if (isPossibleWithdraw) {
-				return new ResponseEntity<>(account, HttpStatus.OK);
+				return new ResponseEntity<>("Saque realizado!", HttpStatus.OK);
 			}
-			return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+			return new ResponseEntity<>("Valor de saque maior que saldo atual da conta", HttpStatus.METHOD_NOT_ALLOWED);
 		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>("Conta de número: " + numberAccount + " não encontrado", HttpStatus.NOT_FOUND);
 	}
 	
 	@PatchMapping("/transfer/{numberAccountRealizeTransfer}/{valueTransfer}/{numberAccountReceiveTransfer}")
@@ -79,5 +79,4 @@ public class ServiceBank {
 		}
 		return new ResponseEntity<String>("Conta de número: " + numberAccountRealizeTransfer + " não encontrado", HttpStatus.NOT_FOUND);
 	}
-
 }
