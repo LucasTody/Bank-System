@@ -69,11 +69,11 @@ public class ServiceBank {
 			boolean isExistAccountReceiveTransfer = accountList.containsKey(numberAccountReceiveTransfer);
 			if (isExistAccountReceiveTransfer) {
 				Account accountReceiveTransfer = accountList.get(numberAccountReceiveTransfer);
-				boolean isTransfer = accountRealizeTransfer.transfer(accountReceiveTransfer, valueTransfer);
-				if (isTransfer) {
+				boolean isTransferred = accountRealizeTransfer.transfer(accountReceiveTransfer, valueTransfer);
+				if (isTransferred) {
 					return new ResponseEntity<String>("Transferência realizada", HttpStatus.OK);
 				}
-				return new ResponseEntity<String>("Transferência mal sucedida", HttpStatus.UNAUTHORIZED);
+				return new ResponseEntity<String>("Valor de transferência inválido", HttpStatus.UNAUTHORIZED);
 			}
 			return new ResponseEntity<String>("Conta de número: " + numberAccountReceiveTransfer + " não encontrado", HttpStatus.NOT_FOUND);
 		}
